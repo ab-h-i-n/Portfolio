@@ -55,7 +55,7 @@
     // projects section scroll animation
 
     ScrollReveal().reveal('.proj-sub-heading');
-    ScrollReveal().reveal('.prooj-main-heading',{delay : 200});
+    ScrollReveal().reveal('.proj-main-heading',{delay : 200});
     ScrollReveal().reveal('.pro-1',{delay : 300});
     ScrollReveal().reveal('.pro-2',{delay : 400});
     ScrollReveal().reveal('.pro-3',{delay : 500});
