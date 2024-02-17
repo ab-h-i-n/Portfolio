@@ -31,14 +31,12 @@
 /* menu bar animation  */
 
 .menu-bar{
-
     transition: all .3s;
-    opacity: 0;
-    transform: translateX(100px);
-
 }
 
 .menu-bar.active{
     opacity: 1;
+    transform: scale(1);
     transform: translateX(0px);
 }
+
