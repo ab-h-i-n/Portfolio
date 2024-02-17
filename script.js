@@ -55,19 +55,19 @@
     // projects section scroll animation
 
     ScrollReveal().reveal('.proj-sub-heading');
-    ScrollReveal().reveal('.proj-main-heading',{delay : 200});
-    ScrollReveal().reveal('.pr-1',{delay : 300});
-    ScrollReveal().reveal('.pr-2',{delay : 400});
-    ScrollReveal().reveal('.pr-3',{delay : 500});
-    ScrollReveal().reveal('.pr-1-head',{delay : 600});
-    ScrollReveal().reveal('.pr-2-head',{delay : 600});
-    ScrollReveal().reveal('.pr-3-head',{delay : 600});
-    ScrollReveal().reveal('.pr-1-b-1',{delay : 800});
-    ScrollReveal().reveal('.pr-2-b-1',{delay : 800});
-    ScrollReveal().reveal('.pr-3-b-1',{delay : 800});
-    ScrollReveal().reveal('.pr-1-b-2',{delay : 1000});
-    ScrollReveal().reveal('.pr-2-b-2',{delay : 1000});
-    ScrollReveal().reveal('.pr-3-b-2',{delay : 1000});
+    ScrollReveal().reveal('.prooj-main-heading',{delay : 200});
+    ScrollReveal().reveal('.pro-1',{delay : 300});
+    ScrollReveal().reveal('.pro-2',{delay : 400});
+    ScrollReveal().reveal('.pro-3',{delay : 500});
+    ScrollReveal().reveal('.pro-1-head',{delay : 600});
+    ScrollReveal().reveal('.pro-2-head',{delay : 600});
+    ScrollReveal().reveal('.pro-3-head',{delay : 600});
+    ScrollReveal().reveal('.pro-1-b-1',{delay : 800});
+    ScrollReveal().reveal('.pro-2-b-1',{delay : 800});
+    ScrollReveal().reveal('.pro-3-b-1',{delay : 800});
+    ScrollReveal().reveal('.pro-1-b-2',{delay : 1000});
+    ScrollReveal().reveal('.pro-2-b-2',{delay : 1000});
+    ScrollReveal().reveal('.pro-3-b-2',{delay : 1000});
 
     //contacts section
 
