@@ -1,0 +1,44 @@
+
+/* hamburger button animation  */
+
+.hamburger-btn div{
+    transition: all .2s ease-in-out;
+}
+
+
+.hamburger-btn.active div:first-child{
+
+    rotate: 45deg;
+    transform-origin: left;
+    transform: translate(3px,-3px);
+
+}
+
+.hamburger-btn.active div:nth-child(2){
+
+    opacity: 0;
+    
+}
+
+.hamburger-btn.active div:last-child{
+
+   width: 100%;
+   rotate: -45deg;
+   transform-origin: left;
+   transform: translate(3px,3px);
+}
+
+/* menu bar animation  */
+
+.menu-bar{
+
+    transition: all .3s;
+    opacity: 0;
+    transform: translateX(100px);
+
+}
+
+.menu-bar.active{
+    opacity: 1;
+    transform: translateX(0px);
+}
