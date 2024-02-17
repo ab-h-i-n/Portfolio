@@ -7,21 +7,21 @@
 
     <title>Portfolio</title>
 
+    <!-- css link  -->
+
+    <link rel="stylesheet" href="./style.css">
+
     <!-- tailwind link  -->
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- javascript file  -->
-
-    <script type="module" src="./script.js"></script>
-
 </head>
 
-<body class="bg-slate-100 text-zinc-950 dark:bg-zinc-950 dark:text-zinc-100">
+<body class="overflow-x-hidden bg-slate-100 text-zinc-950 dark:bg-zinc-950 dark:text-zinc-100">
 
     <!-- nav bar  -->
 
-    <nav class=" px-10 md:px-20 lg:px-16 xl:px-56 pt-20 pb-4 flex justify-between items-center h-[136px]">
+    <nav id="top" class="px-10 md:px-20 lg:px-16 xl:px-56 pt-20 pb-4 flex justify-between items-center h-[136px]">
 
         <!-- logo name  -->
 
@@ -30,7 +30,7 @@
         <!-- links  -->
 
         <ul
-            class="menu-bar bg-slate-200 dark:md:bg-transparent dark:bg-zinc-800 grid grid-rows-4 absolute right-10 top-32 divide-y divide-zinc-700 hidden md:flex md:gap-x-0 md:bg-transparent md:divide-none md:static md:text-lg lg:text-xl lg:gap-x-8 xl:text-2xl ">
+            class="menu-bar bg-slate-200 dark:md:bg-transparent dark:bg-zinc-800 grid grid-rows-4 absolute right-10 top-32 divide-y divide-zinc-700 md:flex md:gap-x-0 md:bg-transparent md:divide-none md:static md:text-lg lg:text-xl lg:gap-x-8 xl:text-2xl md:translate-x-[0px] md:opacity-100 rounded-3xl ">
 
             <li class="py-2 px-6"><a href="#about">About</a></li>
             <li class="py-2 px-6"><a href="#experience">Experience</a></li>
@@ -41,12 +41,12 @@
 
         <!-- hamburger button  -->
 
-        <svg class="hamburger-btn bg-zinc-800 rounded stroke-slate-100 w-10 cursor-pointer md:hidden"
-            viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 18H10" stroke-width="2" stroke-linecap="round" />
-            <path d="M4 12L16 12" stroke-width="2" stroke-linecap="round" />
-            <path d="M4 6L20 6" stroke-width="2" stroke-linecap="round" />
-        </svg>
+        <div
+            class="hamburger-btn bg-slate-200 dark:bg-zinc-800 w-10 h-10 px-2 py-2.5 rounded-lg flex flex-col justify-between md:hidden">
+            <div class="bg-zinc-950 dark:bg-slate-100 w-full h-[3px] rounded-3xl"></div>
+            <div class="bg-zinc-950 dark:bg-slate-100 w-[90%] h-[3px] rounded-3xl"></div>
+            <div class="bg-zinc-950 dark:bg-slate-100 w-[50%] h-[3px] rounded-3xl"></div>
+        </div>
 
     </nav>
 
@@ -60,15 +60,17 @@
 
             <!-- profile pic  -->
 
-            <img src="./images/main_img.jpg" class="rounded-full w-56 place-self-center md:w-64 lg:w-72 xl:w-[400px]">
+            <img src="./images/main_img.jpg"
+                class="profile-pic rounded-full w-56 place-self-center md:w-64 lg:w-72 xl:w-[400px]">
 
             <!-- main details  -->
 
             <div class="grid place-self-center w-full">
 
-                <p class="text-zinc-500 dark:text-zinc-400 text-center xl:text-xl">Hello I'm</p>
-                <h1 class="text-4xl font-black text-center xl:text-6xl">Abhin KS</h1>
-                <h2 class="text-xl font-medium text-center text-zinc-500 dark:text-zinc-400 mt-2 text-2xl">Full Stack
+                <p class="first-heading text-zinc-500 dark:text-zinc-400 text-center xl:text-xl">Hello I'm</p>
+                <h1 class="main-heading text-4xl font-black text-center xl:text-6xl">Abhin KS</h1>
+                <h2 class="sub-heading text-xl font-medium text-center text-zinc-500 dark:text-zinc-400 mt-2 text-2xl">
+                    Full Stack
                     Developer
                 </h2>
 
@@ -80,7 +82,7 @@
 
                     <a href="#">
                         <button
-                            class="py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Download
+                            class="download-cv-button py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Download
                             CV</button>
                     </a>
 
@@ -88,7 +90,7 @@
 
                     <a href="#contacts">
                         <button
-                            class="py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Contact
+                            class="contacts-button py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Contact
                             info</button>
                     </a>
 
@@ -100,11 +102,11 @@
 
                     <!-- linked in profile link  -->
 
-                    <a href="https://www.linkedin.com/in/abhin-ks-a98543258/" target="_blank">
+                    <a href="https://www.linkedin.com/in/abhin-ks-a98543258/" target="_blank" class="linkedin-button">
 
                         <!DOCTYPE svg
                             PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg
-                            class="fill-current text-zinc-950 dark:text-slate-100 w-9 xl:w-12" id="Layer_1"
+                            class=" fill-current text-zinc-950 dark:text-slate-100 w-9 xl:w-12" id="Layer_1"
                             style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67"
                             xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -117,7 +119,7 @@
 
                     <!-- github page link  -->
 
-                    <a href="https://github.com/ab-h-i-n" target="_blank">
+                    <a href="https://github.com/ab-h-i-n" target="_blank" class="github-button ">
 
                         <!DOCTYPE svg
                             PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg
@@ -149,8 +151,10 @@
         <!-- heading  -->
         <div class="grid">
 
-            <p class="text-md text-zinc-400 dark:text-zinc-200 text-center">Get To Know More</p>
-            <h1 class="text-4xl text-zinc-950 dark:text-slate-100 text-center font-black xl:text-5xl">About Me</h1>
+            <p class="about-sub-heading text-md text-zinc-400 dark:text-zinc-200 text-center">Get To Know More</p>
+            <h1
+                class="about-main-heading text-4xl text-zinc-950 dark:text-slate-100 text-center font-black xl:text-5xl">
+                About Me</h1>
 
         </div>
 
@@ -160,7 +164,8 @@
 
             <!-- image  -->
 
-            <img src="./images/second_img.jpg" class="w-44 rounded-3xl place-self-center md:w-[300px] lg:w-[320px]">
+            <img src="./images/second_img.jpg"
+                class="second-img w-44 rounded-3xl place-self-center md:w-[300px] lg:w-[320px]">
 
             <!-- experince and about  -->
 
@@ -173,7 +178,7 @@
                     <!-- experiece  -->
 
                     <div
-                        class="border border-zinc-950 dark:border-slate-200 grid rounded-3xl place-items-center p-6 md:w-full ">
+                        class="experience-div border border-zinc-950 dark:border-slate-200 grid rounded-3xl place-items-center p-6 md:w-full ">
 
                         <svg class="w-10 fill-current text-zinc-950 dark:text-zinc-200 mb-2 " version="1.1" id="Capa_1"
                             xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -193,7 +198,7 @@
                         </svg>
 
                         <h1 class="font-medium text-xl text-zinc-950 dark:text-zinc-200 text-center">Experience</h1>
-                        <p class="text-md text-zinc-500 dark:text-zinc-400 text-center">2+ Years</p>
+                        <p class="text-md text-zinc-500 dark:text-zinc-400 text-center">Beginner</p>
                         <p class="text-md text-zinc-500 dark:text-zinc-400 text-center">Full stack developer</p>
 
                     </div>
@@ -201,7 +206,7 @@
                     <!-- education  -->
 
                     <div
-                        class="border border-zinc-950 dark:border-slate-200 grid rounded-3xl place-items-center p-6 md:w-full">
+                        class="education-div border border-zinc-950 dark:border-slate-200 grid rounded-3xl place-items-center p-6 md:w-full">
 
                         <svg class="w-10 fill-current text-zinc-950 dark:text-zinc-200" viewBox="0 0 14 14" role="img"
                             focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
@@ -220,7 +225,8 @@
 
                 <!-- about  -->
 
-                <div class="text-base mt-5 grid gap-y-5 tracking-wider md:text-sm md:gap-y-3 text-justify xl:text-xl">
+                <div
+                    class="paragraph-div text-base mt-5 grid gap-y-5 tracking-wider md:text-sm md:gap-y-3 text-justify xl:text-xl">
                     <p>
                         A second-year student pursuing a Bachelor's in Computer Applications (BCA) at MES Marampally
                         College, I am deeply passionate about anime and coding. Currently enrolled in the "No Time Full
@@ -244,8 +250,8 @@
         <!-- heading  -->
         <div class="grid">
 
-            <p class="text-md text-zinc-400 dark:text-zinc-200 text-center">Explore My</p>
-            <h1 class="text-4xl text-zinc-950 dark:text-slate-100 text-center font-black xl:text-5xl">Experience</h1>
+            <p class="exp-sub-heading text-md text-zinc-400 dark:text-zinc-200 text-center">Explore My</p>
+            <h1 class="exp-main-heading text-4xl text-zinc-950 dark:text-slate-100 text-center font-black xl:text-5xl">Experience</h1>
 
         </div>
 
@@ -256,15 +262,15 @@
             <!-- fontend experiece  -->
 
             <div
-                class="border border-zinc-950 dark:border-slate-200 grid rounded-3xl place-items-center p-6 md:w-full md:max-w-sm lg:max-w-lg xl:max-w-2xl xl:py-20">
+                class="f-div border border-zinc-950 dark:border-slate-200 grid rounded-3xl place-items-center p-6 md:w-full md:max-w-sm lg:max-w-lg xl:max-w-2xl xl:py-20">
 
                 <!-- heading  -->
-                <h1 class="text-xl font-medium text-zinc-500 dark:text-zinc-400 text-center xl:text-3xl xl:mb-3">Fontend
+                <h1 class="f-div-head text-xl font-medium text-zinc-500 dark:text-zinc-400 text-center xl:text-3xl xl:mb-3">Fontend
                     Development</h1>
 
                 <!-- skills container  -->
 
-                <div class="grid grid-cols-1 lg:grid-cols-2">
+                <div class="f-div-skills grid grid-cols-1 lg:grid-cols-2">
 
                     <!-- skill 1  -->
 
@@ -460,15 +466,15 @@
             <!-- backend experiece  -->
 
             <div
-                class=" border border-zinc-950 dark:border-slate-200 grid rounded-3xl place-items-center p-6 md:w-full md:max-w-sm lg:max-w-lg xl:max-w-2xl xl:py-20">
+                class="b-div border border-zinc-950 dark:border-slate-200 grid rounded-3xl place-items-center p-6 md:w-full md:max-w-sm lg:max-w-lg xl:max-w-2xl xl:py-20">
 
                 <!-- heading  -->
-                <h1 class="text-xl font-medium text-zinc-500 dark:text-zinc-400 text-center xl:text-3xl xl:mb-3 ">
+                <h1 class="b-div-head text-xl font-medium text-zinc-500 dark:text-zinc-400 text-center xl:text-3xl xl:mb-3 ">
                     Backend Development</h1>
 
                 <!-- skill container  -->
 
-                <div class="grid grid-cols-1 lg:grid-cols-2">
+                <div class="b-div-skills grid grid-cols-1 lg:grid-cols-2">
 
                     <!-- skill 1  -->
 
@@ -673,8 +679,8 @@
         <!-- heading  -->
         <div class="grid">
 
-            <p class="text-md text-zinc-400 dark:text-zinc-200 text-center">Browse My Recent</p>
-            <h1 class="text-4xl text-zinc-950 dark:text-slate-100 text-center font-black xl:text-5xl">Projects</h1>
+            <p class="proj-sub-heading text-md text-zinc-400 dark:text-zinc-200 text-center">Browse My Recent</p>
+            <h1 class="proj-main-heading text-4xl text-zinc-950 dark:text-slate-100 text-center font-black xl:text-5xl">Projects</h1>
 
         </div>
 
@@ -684,7 +690,7 @@
 
             <!-- project 1  -->
 
-            <div class="border border-zinc-950 dark:border-slate-200 rounded-3xl p-5 grid place-items-center xl:p-10">
+            <div class="pr-1 border border-zinc-950 dark:border-slate-200 rounded-3xl p-5 grid place-items-center xl:p-10">
 
                 <!-- project img  -->
 
@@ -694,7 +700,7 @@
                 <!-- project name  -->
 
 
-                <h1 class="font-bold text-3xl my-2 xl:my-5">Responsive Nav</h1>
+                <h1 class="pr-1-head font-bold text-3xl my-2 xl:my-5">Responsive Nav</h1>
 
                 <!-- buttons  -->
 
@@ -703,12 +709,12 @@
                     <!-- github button  -->
 
                     <a href="https://github.com/ab-h-i-n/Responsive-Navbar" target="_blank"><button
-                            class="py-2 px-4 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950">GitHub</button></a>
+                            class="pr-1-b-1 py-2 px-4 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950">GitHub</button></a>
 
                     <!-- view demo button  -->
 
                     <a href="https://ab-h-i-n.github.io/Responsive-Navbar/" target="_blank"><button
-                            class="py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Live
+                            class="pr-1-b-2 py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Live
                             Demo</button></a>
 
                 </div>
@@ -718,7 +724,7 @@
 
             <!-- project 2  -->
 
-            <div class="border border-zinc-950 dark:border-slate-200 rounded-3xl p-5 grid place-items-center xl:p-10">
+            <div class="pr-2 border border-zinc-950 dark:border-slate-200 rounded-3xl p-5 grid place-items-center xl:p-10">
 
                 <!-- project img  -->
 
@@ -728,7 +734,7 @@
                 <!-- project name  -->
 
 
-                <h1 class="font-bold text-3xl my-2 xl:my-5">Hero Section</h1>
+                <h1 class="pr-2-head font-bold text-3xl my-2 xl:my-5">Hero Section</h1>
 
                 <!-- buttons  -->
 
@@ -737,12 +743,12 @@
                     <!-- github button  -->
 
                     <a href="https://github.com/ab-h-i-n/Hero_Section" target="_blank"><button
-                            class="py-2 px-4 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950">GitHub</button></a>
+                            class="pr-2-b-1 py-2 px-4 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950">GitHub</button></a>
 
                     <!-- view demo button  -->
 
                     <a href="https://ab-h-i-n.github.io/Hero_Section/" target="_blank"><button
-                            class="py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Live
+                            class="pr-2-b-2 py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Live
                             Demo</button></a>
 
                 </div>
@@ -751,7 +757,7 @@
 
             <!-- project 3  -->
 
-            <div class="border border-zinc-950 dark:border-slate-200 rounded-3xl p-5 grid place-items-center xl:p-10">
+            <div class="pr-3 border border-zinc-950 dark:border-slate-200 rounded-3xl p-5 grid place-items-center xl:p-10">
 
                 <!-- project img  -->
 
@@ -761,7 +767,7 @@
                 <!-- project name  -->
 
 
-                <h1 class="font-bold text-3xl my-2 text-center xl:my-5">Login Page</h1>
+                <h1 class="pr-3-head font-bold text-3xl my-2 text-center xl:my-5">Login Page</h1>
 
                 <!-- buttons  -->
 
@@ -770,12 +776,12 @@
                     <!-- github button  -->
 
                     <a href="https://github.com/ab-h-i-n/Login_Page_Tailwind" target="_blank"><button
-                            class="py-2 px-4 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950">GitHub</button></a>
+                            class="pr-3-b-1 py-2 px-4 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950">GitHub</button></a>
 
                     <!-- view demo button  -->
 
                     <a href="https://ab-h-i-n.github.io/Login_Page_Tailwind/" target="_blank"><button
-                            class="py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Live
+                            class="pr-3-b-2 py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Live
                             Demo</button></a>
 
                 </div>
@@ -794,14 +800,14 @@
         <!-- heading  -->
         <div class="grid">
 
-            <p class="text-md text-zinc-400 dark:text-zinc-200 text-center">Get In Touch</p>
-            <h1 class="text-4xl text-zinc-950 dark:text-slate-100 text-center font-black xl:text-6xl">Contact Me</h1>
+            <p class="cont-sub-heading text-md text-zinc-400 dark:text-zinc-200 text-center">Get In Touch</p>
+            <h1 class="cont-main-heading text-4xl text-zinc-950 dark:text-slate-100 text-center font-black xl:text-6xl">Contact Me</h1>
 
         </div>
 
         <!-- mail opening button  -->
 
-        <a href="mailto:abhinshelly@gmail.com">
+        <a href="mailto:abhinshelly@gmail.com" class="cont-button">
 
             <!-- button  -->
 
@@ -829,9 +835,9 @@
 
         <!-- links  -->
 
-        <ul class="flex absolute bottom-10 lg:bottom-32 gap-x-5 lg:gap-x-20 text-sm lg:text-xl">
+        <ul class=" bottom-links flex absolute bottom-10 lg:bottom-32 gap-x-5 lg:gap-x-20 text-sm lg:text-xl">
 
-            <li><a href="#home">Home</a></li>
+            <li ><a href="#top">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#experience">Experience</a></li>
             <li><a href="#projects">Projects</a></li>
@@ -841,7 +847,13 @@
 
     </section>
 
+    <!-- for scroll animation  -->
 
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!-- javascript file  -->
+
+    <script src="./script.js"></script>
 </body>
 
 </html>
