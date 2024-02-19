@@ -15,9 +15,10 @@
     ScrollReveal({
         reset:true,
         distance:'60px',
-        duration:2500,
-        delay:0
+        duration:1200,
+        delay:100
     })
+    
 
     // home section scroll animation
 
