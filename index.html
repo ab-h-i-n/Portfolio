@@ -1,894 +1,704 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Portfolio</title>
-
-    <!-- css link  -->
-
-    <link rel="stylesheet" href="./style.css">
-
-    <!-- tailwind link  -->
-
+    <title>DevPortfolio | Full Stack Engineer</title>
+    <meta name="description" content="Portfolio of a Full Stack Developer specializing in modern web technologies.">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['Space Grotesk', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#64ffda',
+                        secondary: '#8892b0',
+                        dark: '#020c1b',
+                        light: '#ccd6f6',
+                        card: 'rgba(17, 34, 64, 0.7)'
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020c1b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #233554;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64ffda;
+        }
+
+        body {
+            background-color: #020c1b;
+            color: #8892b0;
+            overflow-x: hidden;
+            cursor: none; /* Hide default cursor for custom one */
+        }
+
+        /* Custom Cursor */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #64ffda;
+        }
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(100, 255, 218, 0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        
+        /* Hover state for cursor */
+        body.hovering .cursor-outline {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(100, 255, 218, 0.1);
+            border-color: transparent;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(17, 34, 64, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Text Gradient */
+        .text-gradient {
+            background: linear-gradient(90deg, #64ffda 0%, #bd34fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Skill Bar Animation */
+        @keyframes fillBar {
+            from { width: 0; }
+        }
+        .skill-fill {
+            animation: fillBar 1.5s ease-out forwards;
+        }
+
+        /* Magnetic Button Effect wrapper */
+        .magnetic-wrap {
+            display: inline-block;
+        }
+
+        /* Glitch effect on hover for logo */
+        .glitch-hover:hover {
+            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+        }
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+    </style>
 </head>
+<body class="antialiased selection:bg-primary selection:text-dark">
 
-<body class="bg-slate-100 text-zinc-950 dark:bg-zinc-950 dark:text-zinc-100">
+    <!-- Custom Cursor Elements -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
 
-    <!-- nav bar  -->
+    <!-- Background Canvas -->
+    <canvas id="bgCanvas" class="fixed top-0 left-0 w-full h-full -z-10 opacity-30"></canvas>
 
-    <nav id="top" class="px-10 pr-16 md:px-20 lg:px-16 xl:px-56 pt-20 pb-4 flex justify-between items-center h-[136px]">
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300 glass" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold font-mono text-primary glitch-hover hover-trigger">&lt;Dev/&gt;</a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-8 text-sm font-mono">
+                <a href="#about" class="hover:text-primary transition-colors hover-trigger"><span class="text-primary">01.</span> About</a>
+                <a href="#experience" class="hover:text-primary transition-colors hover-trigger"><span class="text-primary">02.</span> Experience</a>
+                <a href="#work" class="hover:text-primary transition-colors hover-trigger"><span class="text-primary">03.</span> Work</a>
+                <a href="#contact" class="hover:text-primary transition-colors hover-trigger"><span class="text-primary">04.</span> Contact</a>
+                <a href="#" class="border border-primary text-primary px-4 py-2 rounded hover:bg-primary/10 transition-colors hover-trigger">Resume</a>
+            </div>
 
-        <!-- logo name  -->
-
-        <h1 class="text-3xl md:text-4xl xl:text-5xl font-light whitespace-nowrap">Abhin KS</h1>
-
-        <!-- links  -->
-
-        <ul
-            class="menu-bar bg-slate-200 dark:md:bg-transparent dark:bg-zinc-800 grid grid-rows-4 absolute right-10 top-32 divide-y divide-zinc-700 md:flex md:gap-x-0 md:bg-transparent md:divide-none md:static md:text-lg lg:text-xl lg:gap-x-8 xl:text-2xl translate-x-[100px] md:translate-x-[0px] opacity-0 md:opacity-100 scale-0 md:scale-100 rounded-3xl z-10">
-
-            <li class="py-2 px-6"><a href="#about">About</a></li>
-            <li class="py-2 px-6"><a href="#experience">Experience</a></li>
-            <li class="py-2 px-6"><a href="#projects">Projects</a></li>
-            <li class="py-2 px-6"><a href="#bottom">Contacts</a></li>
-
-        </ul>
-
-        <!-- hamburger button  -->                  
-
-        <div
-            class="hamburger-btn bg-slate-200 dark:bg-zinc-800 w-10 h-10 px-2 py-2.5 rounded-lg flex flex-col justify-between md:hidden">
-            <div class="bg-zinc-950 dark:bg-slate-100 w-full h-[3px] rounded-3xl"></div>
-            <div class="bg-zinc-950 dark:bg-slate-100 w-[90%] h-[3px] rounded-3xl"></div>
-            <div class="bg-zinc-950 dark:bg-slate-100 w-[50%] h-[3px] rounded-3xl"></div>
+            <!-- Mobile Menu Button -->
+            <button id="menuBtn" class="md:hidden text-2xl text-primary hover-trigger focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-
     </nav>
 
-    <!-- home section  -->
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenu" class="fixed inset-0 bg-dark/95 backdrop-blur-xl z-40 transform translate-x-full transition-transform duration-300 flex items-center justify-center">
+        <div class="flex flex-col space-y-8 text-center text-xl font-mono">
+            <a href="#about" class="mobile-link hover:text-primary"><span class="text-primary">01.</span> About</a>
+            <a href="#experience" class="mobile-link hover:text-primary"><span class="text-primary">02.</span> Experience</a>
+            <a href="#work" class="mobile-link hover:text-primary"><span class="text-primary">03.</span> Work</a>
+            <a href="#contact" class="mobile-link hover:text-primary"><span class="text-primary">04.</span> Contact</a>
+            <button id="closeMenu" class="absolute top-6 right-6 text-3xl text-primary hover-trigger">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
 
-    <section id="home" class="h-[calc(100vh-136px)] flex items-center justify-center ">
+    <main class="px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
+        
+        <!-- Hero Section -->
+        <section class="min-h-screen flex flex-col justify-center pt-20" id="home">
+            <p class="text-primary font-mono mb-5 reveal">Hi, my name is</p>
+            <h1 id="profile-name" class="text-5xl md:text-7xl font-bold text-light mb-4 reveal" style="transition-delay: 100ms;">
+                Abhin.
+            </h1>
+            <h2 class="text-4xl md:text-6xl font-bold text-secondary mb-8 reveal" style="transition-delay: 200ms;">
+                I build things for the web.
+            </h2>
+            <p class="max-w-xl text-lg mb-12 reveal" style="transition-delay: 300ms;">
+                I'm a software engineer specializing in building (and occasionally designing) exceptional digital experiences. Currently, I'm focused on building accessible, human-centered products at <span class="text-primary">TechCorp</span>.
+            </p>
+            <div class="reveal" style="transition-delay: 400ms;">
+                <a href="#work" class="border border-primary text-primary px-8 py-4 rounded font-mono hover:bg-primary/10 transition-all hover-trigger inline-block">Check out my work!</a>
+            </div>
+            
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce-slow hidden md:block">
+                <i class="fas fa-chevron-down text-primary text-xl"></i>
+            </div>
+        </section>
 
-        <!-- main contents  -->
+        <!-- About Section -->
+        <section id="about" class="py-24">
+            <div class="flex items-center mb-12 reveal">
+                <h2 class="text-2xl md:text-3xl font-bold text-light"><span class="text-primary font-mono text-xl mr-2">01.</span> About Me</h2>
+                <div class="h-px bg-gray-700 w-1/3 ml-4"></div>
+            </div>
 
-        <div class="grid grid-rows-2 gap-y-3 md:flex md:gap-x-20 lg:gap-x-40">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-4 text-lg reveal">
+                    <p>Hello! My name is <span class="text-primary">Abhin</span>. I am a software engineer and a <strong>BCA graduate from MES College Marampally, Aluva</strong>. I enjoy creating things that live on the internet.</p>
+                    <p>My interest in web development started during my college days, and I've been hooked ever since. Currently, I'm focused on building accessible, human-centered products.</p>
+                    <p>Here are a few technologies I've been working with recently:</p>
+                    
+                    <ul class="grid grid-cols-2 font-mono text-sm mt-4 gap-2">
+                        <li class="flex items-center"><i class="fas fa-caret-right text-primary mr-2"></i> JavaScript (ES6+)</li>
+                        <li class="flex items-center"><i class="fas fa-caret-right text-primary mr-2"></i> React</li>
+                        <li class="flex items-center"><i class="fas fa-caret-right text-primary mr-2"></i> Node.js</li>
+                        <li class="flex items-center"><i class="fas fa-caret-right text-primary mr-2"></i> TypeScript</li>
+                        <li class="flex items-center"><i class="fas fa-caret-right text-primary mr-2"></i> PostgreSQL</li>
+                        <li class="flex items-center"><i class="fas fa-caret-right text-primary mr-2"></i> Tailwind CSS</li>
+                    </ul>
+                </div>
+                
+                <div class="relative group reveal" style="transition-delay: 200ms;">
+                    <div class="absolute inset-0 bg-primary rounded opacity-20 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-300"></div>
+                    <div class="relative rounded overflow-hidden bg-primary">
+                        <!-- Placeholder for Profile Image -->
+                        <div class="aspect-square bg-gray-800 flex items-center justify-center grayscale group-hover:grayscale-0 transition-all duration-500 mix-blend-multiply group-hover:mix-blend-normal">
+                            <i class="fas fa-user-astronaut text-9xl text-slate-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            <!-- profile pic  -->
+        <!-- Experience Section -->
+        <section id="experience" class="py-24 max-w-3xl mx-auto">
+            <div class="flex items-center mb-12 reveal">
+                <h2 class="text-2xl md:text-3xl font-bold text-light"><span class="text-primary font-mono text-xl mr-2">02.</span> Where I've Worked</h2>
+                <div class="h-px bg-gray-700 w-1/3 ml-4"></div>
+            </div>
 
-            <img src="./images/main_img.jpg"
-                class="profile-pic rounded-full w-56 place-self-center md:w-64 lg:w-72 xl:w-[400px]">
-
-            <!-- main details  -->
-
-            <div class="grid place-self-center w-full">
-
-                <p class="first-heading text-zinc-500 dark:text-zinc-400 text-center xl:text-xl">Hello I'm</p>
-                <h1 class="main-heading text-4xl font-black text-center xl:text-6xl">Abhin KS</h1>
-                <h2 class="sub-heading text-xl font-medium text-center text-zinc-500 dark:text-zinc-400 mt-2 text-2xl">
-                    Full Stack
-                    Developer
-                </h2>
-
-                <!-- buttons  -->
-
-                <div class="flex gap-x-3 mt-5 xl:gap-x-4">
-
-                    <!-- download cv button  -->
-
-                    <a href="#">
-                        <button
-                            class="download-cv-button py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Download
-                            CV</button>
-                    </a>
-
-                    <!-- contact info button  -->
-
-                    <a href="#bottom">
-                        <button
-                            class="contacts-button py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Contact
-                            info</button>
-                    </a>
-
+            <div class="space-y-12">
+                <!-- Job 1 -->
+                <div class="reveal glass p-6 rounded-lg hover:-translate-y-2 transition-transform duration-300 hover-trigger">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
+                        <h3 class="text-xl font-bold text-light">Full Stack Developer <a href="https://cravings.live" target="_blank" class="text-primary hover:underline">@ Cravings</a></h3>
+                        <span class="font-mono text-sm">1 Year (Current)</span>
+                    </div>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-start"><i class="fas fa-caret-right text-primary mt-1 mr-2"></i> <span>Lead full stack development initiatives for <a href="https://cravings.live" target="_blank" class="text-primary hover:underline">cravings.live</a>, building scalable web applications from concept to deployment.</span></li>
+                        <li class="flex items-start"><i class="fas fa-caret-right text-primary mt-1 mr-2"></i> <span>Optimize application performance, design database schemas, and ensure cross-browser compatibility for a seamless user experience.</span></li>
+                        <li class="flex items-start"><i class="fas fa-caret-right text-primary mt-1 mr-2"></i> <span>Collaborate with cross-functional teams to design, implement, and maintain robust features across the entire technology stack.</span></li>
+                    </ul>
                 </div>
 
-                <!-- social links  -->
+                <!-- Job 2 (Placeholder for previous experience or freelance work) -->
+                <div class="reveal glass p-6 rounded-lg hover:-translate-y-2 transition-transform duration-300 hover-trigger">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
+                        <h3 class="text-xl font-bold text-light">Freelance Developer <span class="text-primary">@ Self-Employed</span></h3>
+                        <span class="font-mono text-sm">2022 - 2023</span>
+                    </div>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-start"><i class="fas fa-caret-right text-primary mt-1 mr-2"></i> <span>Developed and maintained code for client websites primarily using HTML, CSS, Sass, JavaScript, and React.</span></li>
+                        <li class="flex items-start"><i class="fas fa-caret-right text-primary mt-1 mr-2"></i> <span>Manually tested sites in various browsers and mobile devices to ensure cross-browser compatibility and responsiveness.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-                <div class="flex gap-x-3 mt-5 justify-center xl:gap-x-5">
+        <!-- Projects Section -->
+        <section id="work" class="py-24">
+            <div class="flex items-center mb-12 reveal">
+                <h2 class="text-2xl md:text-3xl font-bold text-light"><span class="text-primary font-mono text-xl mr-2">03.</span> Some Things I've Built</h2>
+                <div class="h-px bg-gray-700 w-1/3 ml-4"></div>
+            </div>
 
-                    <!-- linked in profile link  -->
+            <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Project Card 1 -->
+                <div class="group relative rounded-lg bg-card overflow-hidden hover:-translate-y-2 transition-all duration-300 reveal hover-trigger">
+                    <div class="p-6 h-full flex flex-col justify-between z-10 relative">
+                        <div>
+                            <div class="flex justify-between items-center mb-6">
+                                <i class="far fa-folder text-4xl text-primary"></i>
+                                <div class="flex space-x-4 text-light">
+                                    <a href="https://github.com/ab-h-i-n" target="_blank" class="hover:text-primary transition-colors"><i class="fab fa-github text-xl"></i></a>
+                                    <a href="#" class="hover:text-primary transition-colors"><i class="fas fa-external-link-alt text-xl"></i></a>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-light mb-2 group-hover:text-primary transition-colors">AI Chat Interface</h3>
+                            <p class="text-sm mb-4">A sleek web interface for interacting with LLMs. Features streaming responses, markdown rendering, and chat history persistence.</p>
+                        </div>
+                        <ul class="flex flex-wrap gap-3 text-xs font-mono text-secondary mt-4">
+                            <li>React</li>
+                            <li>Tailwind</li>
+                            <li>OpenAI API</li>
+                        </ul>
+                    </div>
+                </div>
 
-                    <a href="https://www.linkedin.com/in/abhin-ks-a98543258/" target="_blank" class="linkedin-button">
+                <!-- Project Card 2 -->
+                <div class="group relative rounded-lg bg-card overflow-hidden hover:-translate-y-2 transition-all duration-300 reveal hover-trigger" style="transition-delay: 100ms;">
+                    <div class="p-6 h-full flex flex-col justify-between z-10 relative">
+                        <div>
+                            <div class="flex justify-between items-center mb-6">
+                                <i class="far fa-folder text-4xl text-primary"></i>
+                                <div class="flex space-x-4 text-light">
+                                    <a href="https://github.com/ab-h-i-n" target="_blank" class="hover:text-primary transition-colors"><i class="fab fa-github text-xl"></i></a>
+                                    <a href="#" class="hover:text-primary transition-colors"><i class="fas fa-external-link-alt text-xl"></i></a>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-light mb-2 group-hover:text-primary transition-colors">E-Commerce Dashboard</h3>
+                            <p class="text-sm mb-4">A comprehensive admin dashboard for managing products, orders, and analytics. Includes dark mode and data visualization.</p>
+                        </div>
+                        <ul class="flex flex-wrap gap-3 text-xs font-mono text-secondary mt-4">
+                            <li>Next.js</li>
+                            <li>PostgreSQL</li>
+                            <li>Chart.js</li>
+                        </ul>
+                    </div>
+                </div>
 
-                        <!DOCTYPE svg
-                            PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg
-                            class=" fill-current text-zinc-950 dark:text-slate-100 w-9 xl:w-12" id="Layer_1"
-                            style="enable-background:new 0 0 67 67;" version="1.1" viewBox="0 0 67 67"
-                            xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <path
-                                d="M50.837,48.137V36.425c0-6.275-3.35-9.195-7.816-9.195  c-3.604,0-5.219,1.983-6.119,3.374V27.71h-6.79c0.09,1.917,0,20.427,0,20.427h6.79V36.729c0-0.609,0.044-1.219,0.224-1.655  c0.49-1.22,1.607-2.483,3.482-2.483c2.458,0,3.44,1.873,3.44,4.618v10.929H50.837z M22.959,24.922c2.367,0,3.842-1.57,3.842-3.531  c-0.044-2.003-1.475-3.528-3.797-3.528s-3.841,1.524-3.841,3.528c0,1.961,1.474,3.531,3.753,3.531H22.959z M34,64  C17.432,64,4,50.568,4,34C4,17.431,17.432,4,34,4s30,13.431,30,30C64,50.568,50.568,64,34,64z M26.354,48.137V27.71h-6.789v20.427  H26.354z"
-                                style="fill-rule:evenodd;clip-rule:evenodd;" />
-                        </svg>
-
-                    </a>
-
-                    <!-- github page link  -->
-
-                    <a href="https://github.com/ab-h-i-n" target="_blank" class="github-button ">
-
-                        <!DOCTYPE svg
-                            PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg
-                            class="fill-current text-zinc-950 dark:text-slate-100 w-9 xl:w-12" id="Layer_1"
-                            style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512"
-                            xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <g>
-                                <path class="st0"
-                                    d="M256,32C132.3,32,32,134.8,32,261.7c0,101.5,64.2,187.5,153.2,217.9c11.2,2.1,15.3-5,15.3-11.1   c0-5.5-0.2-19.9-0.3-39.1c-62.3,13.9-75.5-30.8-75.5-30.8c-10.2-26.5-24.9-33.6-24.9-33.6c-20.3-14.3,1.5-14,1.5-14   c22.5,1.6,34.3,23.7,34.3,23.7c20,35.1,52.4,25,65.2,19.1c2-14.8,7.8-25,14.2-30.7c-49.7-5.8-102-25.5-102-113.5   c0-25.1,8.7-45.6,23-61.6c-2.3-5.8-10-29.2,2.2-60.8c0,0,18.8-6.2,61.6,23.5c17.9-5.1,37-7.6,56.1-7.7c19,0.1,38.2,2.6,56.1,7.7   c42.8-29.7,61.5-23.5,61.5-23.5c12.2,31.6,4.5,55,2.2,60.8c14.3,16.1,23,36.6,23,61.6c0,88.2-52.4,107.6-102.3,113.3   c8,7.1,15.2,21.1,15.2,42.5c0,30.7-0.3,55.5-0.3,63c0,6.1,4,13.3,15.4,11C415.9,449.1,480,363.1,480,261.7   C480,134.8,379.7,32,256,32z" />
-                            </g>
-                        </svg>
-
-                    </a>
-
+                <!-- Project Card 3 -->
+                <div class="group relative rounded-lg bg-card overflow-hidden hover:-translate-y-2 transition-all duration-300 reveal hover-trigger" style="transition-delay: 200ms;">
+                    <div class="p-6 h-full flex flex-col justify-between z-10 relative">
+                        <div>
+                            <div class="flex justify-between items-center mb-6">
+                                <i class="far fa-folder text-4xl text-primary"></i>
+                                <div class="flex space-x-4 text-light">
+                                    <a href="https://github.com/ab-h-i-n" target="_blank" class="hover:text-primary transition-colors"><i class="fab fa-github text-xl"></i></a>
+                                    <a href="#" class="hover:text-primary transition-colors"><i class="fas fa-external-link-alt text-xl"></i></a>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-light mb-2 group-hover:text-primary transition-colors">Task Manager</h3>
+                            <p class="text-sm mb-4">Collaborative task management app with real-time updates via WebSockets. Drag and drop kanban board included.</p>
+                        </div>
+                        <ul class="flex flex-wrap gap-3 text-xs font-mono text-secondary mt-4">
+                            <li>Vue 3</li>
+                            <li>Firebase</li>
+                            <li>Pinia</li>
+                        </ul>
+                    </div>
                 </div>
 
             </div>
-
-        </div>
-
-
-    </section>
-
-    <!-- about section  -->
-
-    <section id="about" class="h-full min-h-screen p-4 pt-20 md:pt-52 lg:pt-32 ">
-
-        <!-- heading  -->
-        <div class="grid">
-
-            <p class="about-sub-heading text-md text-zinc-400 dark:text-zinc-200 text-center">Get To Know More</p>
-            <h1
-                class="about-main-heading text-4xl text-zinc-950 dark:text-slate-100 text-center font-black xl:text-5xl">
-                About Me</h1>
-
-        </div>
-
-        <!-- main contents  -->
-
-        <div class="grid mt-8 md:flex md:mt-20 xl:px-40 md:gap-x-6">
-
-            <!-- image  -->
-
-            <img src="./images/second_img.jpg"
-                class="second-img w-44 rounded-3xl place-self-center md:w-[300px] lg:w-[320px]">
-
-            <!-- experince and about  -->
-
-            <div class="grid px-5 mt-5">
-
-                <!-- experiece and education  -->
-
-                <div class="grid gap-y-5 md:flex md:gap-x-5 md:justify-center">
-
-                    <!-- experiece  -->
-
-                    <div
-                        class="experience-div border border-zinc-950 dark:border-slate-200 grid rounded-3xl place-items-center p-6 md:w-full ">
-
-                        <svg class="w-10 fill-current text-zinc-950 dark:text-zinc-200 mb-2 " version="1.1" id="Capa_1"
-                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                            viewBox="0 0 296.084 296.084" xml:space="preserve">
-                            <g>
-                                <path d="M191.27,84.676l24.919-21.389c4.182-3.572,7.52-11.037,7.52-16.537v-37c0-5.5-4.167-9.75-9.667-9.75h-58.333v76.689
-		                            C168.709,77.51,180.064,80.221,191.27,84.676z" />
-                                <path d="M140.709,0H82.042c-5.5,0-10.333,4.25-10.333,9.75v37c0,5.5,3.588,12.922,7.77,16.494l24.928,21.428
-		                        c11.508-4.574,24.302-7.307,36.302-8.045V0z" />
-                                <path
-                                    d="M148.041,91.416c-56.516,0-102.332,45.816-102.332,102.334s45.816,102.334,102.332,102.334
-		                            c56.518,0,102.334-45.816,102.334-102.334S204.559,91.416,148.041,91.416z M148.041,275.377c-45.008,0-81.625-36.619-81.625-81.627
-		                            c0-45.01,36.617-81.627,81.625-81.627c45.01,0,81.627,36.617,81.627,81.627C229.668,238.758,193.051,275.377,148.041,275.377z" />
-                                <path d="M148.041,127.123c-36.736,0-66.625,29.889-66.625,66.627s29.889,66.627,66.625,66.627
-		                            c36.738,0,66.627-29.889,66.627-66.627S184.779,127.123,148.041,127.123z" />
-                            </g>
-                        </svg>
-
-                        <h1 class="font-medium text-xl text-zinc-950 dark:text-zinc-200 text-center">Experience</h1>
-                        <p class="text-md text-zinc-500 dark:text-zinc-400 text-center">Beginner</p>
-                        <p class="text-md text-zinc-500 dark:text-zinc-400 text-center">Full stack developer</p>
-
-                    </div>
-
-                    <!-- education  -->
-
-                    <div
-                        class="education-div border border-zinc-950 dark:border-slate-200 grid rounded-3xl place-items-center p-6 md:w-full">
-
-                        <svg class="w-10 fill-current text-zinc-950 dark:text-zinc-200" viewBox="0 0 14 14" role="img"
-                            focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="m 12.499079,12.25525 c 0.0968,0 0.188377,-0.0436 0.249339,-0.11884 0.06096,-0.0752 0.08473,-0.17385 0.06473,-0.26853 l -0.202146,-0.95662 c 0.115125,-0.11137 0.187491,-0.26686 0.187491,-0.43975 0,-0.182 -0.08106,-0.34343 -0.206876,-0.45558 l 0,-3.32202 -0.810333,0.50146 0,2.82056 c -0.125815,0.11215 -0.2069,0.27358 -0.2069,0.45558 0,0.17291 0.07239,0.32841 0.187515,0.43975 l -0.20217,0.95662 c -0.02,0.0947 0.0038,0.19335 0.06473,0.26853 0.06096,0.0752 0.152539,0.11884 0.249339,0.11884 l 0.625281,0 z M 12.773741,4.75539 7.5021019,1.49209 C 7.3477151,1.39699 7.1736728,1.34925 6.9996305,1.34925 c -0.1740423,0 -0.3482077,0.0477 -0.5016586,0.14284 l -5.271713,3.2633 C 1.0854931,4.84249 0.99999905,4.99633 0.99999905,5.1619 c 0,0.1656 0.085494,0.31949 0.22625985,0.40673 l 5.2716883,3.26333 c 0.153451,0.0952 0.3276163,0.14284 0.5016586,0.14284 0.1740423,0 0.3481092,-0.0477 0.5024714,-0.14284 L 12.773741,5.56863 c 0.140766,-0.0872 0.22626,-0.24113 0.22626,-0.40673 0,-0.16557 -0.08549,-0.31946 -0.22626,-0.40651 z M 6.9996059,9.78508 c -0.3283798,0 -0.6488777,-0.0912 -0.928242,-0.26411 l -3.0750017,-1.90368 0,3.27796 c 0,0.97016 1.7931578,1.7555 4.0032436,1.7555 2.2108742,0 4.0038842,-0.78536 4.0038842,-1.7555 l 0,-3.27796 -3.0748786,1.90368 C 7.6492472,9.69388 7.3279857,9.78508 6.9996059,9.78508 Z" />
-                        </svg>
-
-                        <h1 class="font-medium text-xl text-zinc-950 dark:text-zinc-200 text-center">Education</h1>
-                        <p class="text-md text-zinc-500 dark:text-zinc-400 text-center ">Bachelor Of Computer
-                            Applications</p>
-
-                    </div>
-
-
-                </div>
-
-                <!-- about  -->
-
-                <div
-                    class="paragraph-div text-base mt-5 grid gap-y-5 tracking-wider md:text-sm md:gap-y-3 text-justify xl:text-xl">
-                    <p>
-                        A second-year student pursuing a Bachelor's in Computer Applications (BCA) at MES Marampally
-                        College, I am deeply passionate about anime and coding. Currently enrolled in the "No Time Full
-                        Stack Web Development Course," I am channeling my enthusiasm for technology into honing my
-                        skills in web development. My commitment to staying at the forefront of technological
-                        advancements is evident in my dual interests. The dynamic field of web development presents both
-                        challenges and opportunities that I am eager to explore. Through this journey, I aim to ma ke a
-                        significant impact at the intersection of technology and creativity.
-                </div>
-
+            
+            <div class="text-center mt-12 reveal">
+                <a href="https://github.com/ab-h-i-n" target="_blank" class="border border-primary text-primary px-8 py-4 rounded font-mono hover:bg-primary/10 transition-all hover-trigger inline-block">
+                    View More on GitHub
+                </a>
             </div>
-
-        </div>
-
-    </section>
-
-    <!-- experience section  -->
-
-    <section id="experience" class="h-full min-h-screen p-4 pt-20 md:pt-52 lg:pt-32 ">
-
-        <!-- heading  -->
-        <div class="grid">
-
-            <p class="exp-sub-heading text-md text-zinc-400 dark:text-zinc-200 text-center">Explore My</p>
-            <h1 class="exp-main-heading text-4xl text-zinc-950 dark:text-slate-100 text-center font-black xl:text-5xl">
-                Experience</h1>
-
-        </div>
-
-        <!-- frontend and backend development  -->
-
-        <div class="grid mt-10 gap-y-5 md:place-items-center lg:flex lg:gap-x-5 lg:pt-20 lg:px-5 xl:justify-center">
-
-            <!-- fontend experiece  -->
-
-            <div
-                class="f-div border border-zinc-950 dark:border-slate-200 grid rounded-3xl place-items-center p-6 md:w-full md:max-w-sm lg:max-w-lg xl:max-w-2xl xl:py-20">
-
-                <!-- heading  -->
-                <h1
-                    class="f-div-head text-xl font-medium text-zinc-500 dark:text-zinc-400 text-center xl:text-3xl xl:mb-3">
-                    Fontend
-                    Development</h1>
-
-                <!-- skills container  -->
-
-                <div class="f-div-skills grid grid-cols-1 lg:grid-cols-2">
-
-                    <!-- skill 1  -->
-
-                    <div class="flex gap-x-3 items-center py-2 px-3">
-
-                        <!-- svg  -->
-
-                        <svg class="fill-current text-zinc-950 dark:text-slate-100 w-10 " viewBox='0 0 24 24'
-                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                            <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
-
-
-                            <g transform="matrix(0.42 0 0 0.42 12 12)">
-                                <g>
-                                    <g transform="matrix(1 0 0 1 0 0)">
-                                        <polygon
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                            points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " />
-                                    </g>
-                                    <g transform="matrix(1 0 0 1 -0.01 0.51)">
-                                        <polygon class="fill-current text-slate-100 dark:text-zinc-950"
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                            points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " />
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-
-
-                        <!-- skill name  and level -->
-
-                        <div class="flex flex-col ">
-                            <p class="font-medium text-xl">HTML</p>
-                            <p class="font-medium text-sm text-zinc-400">Experienced</p>
-                        </div>
-
-                    </div>
-
-
-                    <!-- skill 2  -->
-
-                    <div class="flex gap-x-3 items-center py-2 px-3">
-
-                        <!-- svg  -->
-
-                        <svg class="fill-current text-zinc-950 dark:text-slate-100 w-10 " viewBox='0 0 24 24'
-                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                            <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
-
-
-                            <g transform="matrix(0.42 0 0 0.42 12 12)">
-                                <g>
-                                    <g transform="matrix(1 0 0 1 0 0)">
-                                        <polygon
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                            points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " />
-                                    </g>
-                                    <g transform="matrix(1 0 0 1 -0.01 0.51)">
-                                        <polygon class="fill-current text-slate-100 dark:text-zinc-950"
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                            points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " />
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-
-
-                        <!-- skill name  and level -->
-
-                        <div class="flex flex-col ">
-                            <p class="font-medium text-xl">CSS</p>
-                            <p class="font-medium text-sm text-zinc-400">Experienced</p>
-                        </div>
-
-                    </div>
-
-                    <!-- skill 3  -->
-
-                    <div class="flex gap-x-3 items-center py-2 px-3">
-
-                        <!-- svg  -->
-
-                        <svg class="fill-current text-zinc-950 dark:text-slate-100 w-10 " viewBox='0 0 24 24'
-                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                            <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
-
-
-                            <g transform="matrix(0.42 0 0 0.42 12 12)">
-                                <g>
-                                    <g transform="matrix(1 0 0 1 0 0)">
-                                        <polygon
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                            points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " />
-                                    </g>
-                                    <g transform="matrix(1 0 0 1 -0.01 0.51)">
-                                        <polygon class="fill-current text-slate-100 dark:text-zinc-950"
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                            points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " />
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-
-
-                        <!-- skill name  and level -->
-
-                        <div class="flex flex-col ">
-                            <p class="font-medium text-xl">REACT</p>
-                            <p class="font-medium text-sm text-zinc-400">Learning</p>
-                        </div>
-
-                    </div>
-
-                    <!-- skill 4  -->
-
-                    <div class="flex gap-x-3 items-center py-2 px-3">
-
-                        <!-- svg  -->
-
-                        <svg class="fill-current text-zinc-950 dark:text-slate-100 w-10 " viewBox='0 0 24 24'
-                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                            <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
-
-
-                            <g transform="matrix(0.42 0 0 0.42 12 12)">
-                                <g>
-                                    <g transform="matrix(1 0 0 1 0 0)">
-                                        <polygon
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                            points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " />
-                                    </g>
-                                    <g transform="matrix(1 0 0 1 -0.01 0.51)">
-                                        <polygon class="fill-current text-slate-100 dark:text-zinc-950"
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                            points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " />
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-
-
-                        <!-- skill name  and level -->
-
-                        <div class="flex flex-col ">
-                            <p class="font-medium text-xl">JavaScript</p>
-                            <p class="font-medium text-sm text-zinc-400">Basics</p>
-                        </div>
-
-                    </div>
-
-
-                    <!-- skill 5  -->
-                    <div class="flex gap-x-3 items-center py-2 px-3">
-
-                        <!-- svg  -->
-
-                        <svg class="fill-current text-zinc-950 dark:text-slate-100 w-10 " viewBox='0 0 24 24'
-                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                            <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
-
-
-                            <g transform="matrix(0.42 0 0 0.42 12 12)">
-                                <g>
-                                    <g transform="matrix(1 0 0 1 0 0)">
-                                        <polygon
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                            points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " />
-                                    </g>
-                                    <g transform="matrix(1 0 0 1 -0.01 0.51)">
-                                        <polygon class="fill-current text-slate-100 dark:text-zinc-950"
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                            points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " />
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-
-
-                        <!-- skill name  and level -->
-
-                        <div class="flex flex-col ">
-                            <p class="font-medium text-xl">Tailwind</p>
-                            <p class="font-medium text-sm text-zinc-400">Experienced</p>
-                        </div>
-
-                    </div>
-
-                </div>
-
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 text-center max-w-2xl mx-auto reveal">
+            <p class="text-primary font-mono mb-4">04. What's Next?</p>
+            <h2 class="text-4xl md:text-5xl font-bold text-light mb-6">Get In Touch</h2>
+            <p class="text-lg mb-12">
+                Although I’m not currently looking for any new opportunities, my inbox is always open. Whether you have a question or just want to say hi, I’ll try my best to get back to you!
+            </p>
+            <a href="mailto:hello@example.com" class="border border-primary text-primary px-8 py-4 rounded font-mono hover:bg-primary/10 transition-all hover-trigger inline-block">Say Hello</a>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-6 text-center text-sm font-mono hover:text-primary transition-colors">
+            <a href="#" class="hover-trigger">Designed & Built by Alex</a>
+            <div class="mt-2 flex justify-center space-x-6 text-xl">
+                <a href="https://github.com/ab-h-i-n" target="_blank" class="hover:text-primary transition-colors hover-trigger"><i class="fab fa-github"></i></a>
+                <a href="#" class="hover:text-primary transition-colors hover-trigger"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="hover:text-primary transition-colors hover-trigger"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-primary transition-colors hover-trigger"><i class="fab fa-codepen"></i></a>
             </div>
+        </footer>
 
+    </main>
 
-            <!-- backend experiece  -->
+    <!-- Scripts -->
+    <script>
+        // --- 1. Custom Cursor Logic ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
 
-            <div
-                class="b-div border border-zinc-950 dark:border-slate-200 grid rounded-3xl place-items-center p-6 md:w-full md:max-w-sm lg:max-w-lg xl:max-w-2xl xl:py-20">
+            // Dot follows immediately
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
 
-                <!-- heading  -->
-                <h1
-                    class="b-div-head text-xl font-medium text-zinc-500 dark:text-zinc-400 text-center xl:text-3xl xl:mb-3 ">
-                    Backend Development</h1>
+            // Outline follows with delay/animation
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
 
-                <!-- skill container  -->
+        // Interactive Elements Hover Effect
+        const hoverTriggers = document.querySelectorAll('.hover-trigger, a, button');
+        hoverTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => {
+                document.body.classList.add('hovering');
+            });
+            trigger.addEventListener('mouseleave', () => {
+                document.body.classList.remove('hovering');
+            });
+        });
 
-                <div class="b-div-skills grid grid-cols-1 lg:grid-cols-2">
+        // --- 2. Scroll Reveal Animation ---
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target); // Only reveal once
+                }
+            });
+        }, { threshold: 0.15 });
 
-                    <!-- skill 1  -->
+        revealElements.forEach(el => revealObserver.observe(el));
 
-                    <div class="flex gap-x-3 items-center py-2 px-3">
+        // --- 3. Particle Background (Canvas) ---
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
 
-                        <!-- svg  -->
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-                        <svg class="fill-current text-zinc-950 dark:text-slate-100 w-10 " viewBox='0 0 24 24'
-                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                            <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = '#64ffda';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
 
+        function initParticles() {
+            particles = [];
+            const numberOfParticles = Math.min(100, window.innerWidth / 10); // Responsive count
+            for (let i = 0; i < numberOfParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
 
-                            <g transform="matrix(0.42 0 0 0.42 12 12)">
-                                <g>
-                                    <g transform="matrix(1 0 0 1 0 0)">
-                                        <polygon
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                            points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " />
-                                    </g>
-                                    <g transform="matrix(1 0 0 1 -0.01 0.51)">
-                                        <polygon class="fill-current text-slate-100 dark:text-zinc-950"
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                            points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " />
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                
+                // Draw lines between close particles
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(100, 255, 218, ${1 - distance/100})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
 
+        initParticles();
+        animateParticles();
 
-                        <!-- skill name  and level -->
+        // --- 4. Mobile Menu Logic ---
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
 
-                        <div class="flex flex-col ">
-                            <p class="font-medium text-xl">MySQL</p>
-                            <p class="font-medium text-sm text-zinc-400">Intermediate</p>
+        function toggleMenu() {
+            const isHidden = mobileMenu.classList.contains('translate-x-full');
+            if (isHidden) {
+                mobileMenu.classList.remove('translate-x-full');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            } else {
+                mobileMenu.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        closeMenu.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+
+        // --- 5. Navbar Hide/Show on Scroll ---
+        let lastScrollY = window.scrollY;
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > lastScrollY) {
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                navbar.style.transform = 'translateY(0)';
+                // Add shadow/background if not at top
+                if (window.scrollY > 50) {
+                    navbar.classList.add('glass', 'shadow-lg');
+                } else {
+                    navbar.classList.remove('shadow-lg');
+                }
+            }
+            lastScrollY = window.scrollY;
+        });
+
+        // --- 6. GitHub API Integration ---
+        async function fetchGitHubData() {
+            const username = 'ab-h-i-n';
+            const projectsGrid = document.getElementById('projects-grid');
+            const profileName = document.getElementById('profile-name');
+
+            try {
+                // 1. Fetch Profile Name
+                const userRes = await fetch(`https://api.github.com/users/${username}`);
+                const userData = await userRes.json();
+                
+                if (userData.name) {
+                    profileName.textContent = userData.name + ".";
+                } else if (userData.login) {
+                    profileName.textContent = userData.login + ".";
+                }
+
+                // 2. Fetch Repositories (Reduced to 3 to make room for 3 manual projects)
+                const reposRes = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=3`);
+                const repos = await reposRes.json();
+
+                // Clear existing mock data
+                projectsGrid.innerHTML = '';
+
+                // --- MANUAL PROJECT 1: CRAVINGS ---
+                const cravingsHTML = `
+                <div class="group relative rounded-lg bg-card overflow-hidden hover:-translate-y-2 transition-all duration-300 reveal active hover-trigger">
+                    <div class="p-6 h-full flex flex-col justify-between z-10 relative">
+                        <div>
+                            <div class="flex justify-between items-center mb-6">
+                                <div class="flex items-center gap-2">
+                                    <i class="far fa-folder text-4xl text-primary"></i>
+                                </div>
+                                <div class="flex space-x-4 text-light">
+                                    <a href="https://cravings.live" target="_blank" class="hover:text-primary transition-colors" title="Live Site"><i class="fas fa-external-link-alt text-xl"></i></a>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-light mb-2 group-hover:text-primary transition-colors">Cravings</h3>
+                            <p class="text-sm mb-4 text-secondary">A live full-stack web application. Lead development initiatives, building scalable features and optimizing performance for a seamless user experience.</p>
                         </div>
-
+                        <ul class="flex flex-wrap gap-3 text-xs font-mono text-secondary mt-4">
+                            <li class="text-primary">Full Stack</li>
+                            <li class="text-primary">Production</li>
+                            <li>Web App</li>
+                        </ul>
                     </div>
-
-
-                    <!-- skill 2  -->
-
-                    <div class="flex gap-x-3 items-center py-2 px-3">
-
-                        <!-- svg  -->
-
-                        <svg class="fill-current text-zinc-950 dark:text-slate-100 w-10 " viewBox='0 0 24 24'
-                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                            <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
-
-
-                            <g transform="matrix(0.42 0 0 0.42 12 12)">
-                                <g>
-                                    <g transform="matrix(1 0 0 1 0 0)">
-                                        <polygon
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                            points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " />
-                                    </g>
-                                    <g transform="matrix(1 0 0 1 -0.01 0.51)">
-                                        <polygon class="fill-current text-slate-100 dark:text-zinc-950"
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                            points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " />
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-
-
-                        <!-- skill name  and level -->
-
-                        <div class="flex flex-col ">
-                            <p class="font-medium text-xl">Node JS</p>
-                            <p class="font-medium text-sm text-zinc-400">Basic</p>
-                        </div>
-
-                    </div>
-
-                    <!-- skill 3  -->
-
-                    <div class="flex gap-x-3 items-center py-2 px-3">
-
-                        <!-- svg  -->
-
-                        <svg class="fill-current text-zinc-950 dark:text-slate-100 w-10 " viewBox='0 0 24 24'
-                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                            <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
-
-
-                            <g transform="matrix(0.42 0 0 0.42 12 12)">
-                                <g>
-                                    <g transform="matrix(1 0 0 1 0 0)">
-                                        <polygon
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                            points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " />
-                                    </g>
-                                    <g transform="matrix(1 0 0 1 -0.01 0.51)">
-                                        <polygon class="fill-current text-slate-100 dark:text-zinc-950"
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                            points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " />
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-
-
-                        <!-- skill name  and level -->
-
-                        <div class="flex flex-col ">
-                            <p class="font-medium text-xl">Express JS</p>
-                            <p class="font-medium text-sm text-zinc-400">Basic</p>
-                        </div>
-
-                    </div>
-
-                    <!-- skill 4  -->
-
-                    <div class="flex gap-x-3 items-center py-2 px-3">
-
-                        <!-- svg  -->
-
-                        <svg class="fill-current text-zinc-950 dark:text-slate-100 w-10 " viewBox='0 0 24 24'
-                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                            <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
-
-
-                            <g transform="matrix(0.42 0 0 0.42 12 12)">
-                                <g>
-                                    <g transform="matrix(1 0 0 1 0 0)">
-                                        <polygon
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                            points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " />
-                                    </g>
-                                    <g transform="matrix(1 0 0 1 -0.01 0.51)">
-                                        <polygon class="fill-current text-slate-100 dark:text-zinc-950"
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                            points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " />
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-
-
-                        <!-- skill name  and level -->
-
-                        <div class="flex flex-col ">
-                            <p class="font-medium text-xl">Mongo DB</p>
-                            <p class="font-medium text-sm text-zinc-400">Basics</p>
-                        </div>
-
-                    </div>
-
-                    <!-- skill 4  -->
-
-                    <div class="flex gap-x-3 items-center py-2 px-3">
-
-                        <!-- svg  -->
-
-                        <svg class="fill-current text-zinc-950 dark:text-slate-100 w-10 " viewBox='0 0 24 24'
-                            xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
-                            <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
-
-
-                            <g transform="matrix(0.42 0 0 0.42 12 12)">
-                                <g>
-                                    <g transform="matrix(1 0 0 1 0 0)">
-                                        <polygon
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4;  fill-rule: nonzero; opacity: 1;"
-                                            points="5.62,-21 9.05,-15.69 15.37,-15.38 15.69,-9.06 21,-5.63 18.12,0 21,5.62 15.69,9.05 15.38,15.37 9.06,15.69 5.63,21 0,18.12 -5.62,21 -9.05,15.69 -15.37,15.38 -15.69,9.06 -21,5.63 -18.12,0 -21,-5.62 -15.69,-9.05 -15.38,-15.37 -9.06,-15.69 -5.63,-21 0,-18.12 " />
-                                    </g>
-                                    <g transform="matrix(1 0 0 1 -0.01 0.51)">
-                                        <polygon class="fill-current text-slate-100 dark:text-zinc-950"
-                                            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill-rule: nonzero; opacity: 1;"
-                                            points="-2.6,6.74 -9.09,0.25 -6.97,-1.87 -2.56,2.53 7,-6.74 9.09,-4.59 " />
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-
-
-                        <!-- skill name  and level -->
-
-                        <div class="flex flex-col ">
-                            <p class="font-medium text-xl">Django</p>
-                            <p class="font-medium text-sm text-zinc-400">Learning</p>
-                        </div>
-
-                    </div>
-
-
-
                 </div>
+                `;
+                projectsGrid.insertAdjacentHTML('beforeend', cravingsHTML);
 
-            </div>
-
-        </div>
-
-    </section>
-
-    <!-- project section  -->
-
-    <section id="projects" class="h-full min-h-screen p-4 pt-20 md:pt-52 lg:pt-32 ">
-
-        <!-- heading  -->
-        <div class="grid">
-
-            <p class="proj-sub-heading text-md text-zinc-400 dark:text-zinc-200 text-center">Browse My Recent</p>
-            <h1 class="proj-main-heading text-4xl text-zinc-950 dark:text-slate-100 text-center font-black xl:text-5xl">
-                Projects</h1>
-
-        </div>
-
-        <!-- projects container  -->
-
-        <div class="grid mt-10 px-4 gap-y-5 place-content-center lg:flex gap-x-5 xl:gap-x-20">
-
-            <!-- project 1  -->
-
-            <div
-                class="pro-1 border border-zinc-950 dark:border-slate-200 rounded-3xl p-5 grid place-items-center xl:p-10">
-
-                <!-- project img  -->
-
-                <img src="./images/IMG_20251018_003203.jpg"
-                    class="w-[250px] h-[250px] object-cover rounded-3xl xl:w-[300px] xl:h-[300px] ">
-
-                <!-- project name  -->
-
-
-                <h1 class="pro-1-head font-bold text-3xl my-2 xl:my-5">Responsive Nav</h1>
-
-                <!-- buttons  -->
-
-                <div class="flex gap-x-3 mt-5 xl:gap-x-4">
-
-                    <!-- github button  -->
-
-                    <a href="https://github.com/ab-h-i-n/Responsive-Navbar" target="_blank"><button
-                            class="pro-1-b-1 py-2 px-4 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950">GitHub</button></a>
-
-                    <!-- view demo button  -->
-
-                    <a href="https://ab-h-i-n.github.io/Responsive-Navbar/" target="_blank"><button
-                            class="pro-1-b-2 py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Live
-                            Demo</button></a>
-
+                // --- MANUAL PROJECT 2: NOTIME ---
+                const noTimeHTML = `
+                <div class="group relative rounded-lg bg-card overflow-hidden hover:-translate-y-2 transition-all duration-300 reveal active hover-trigger" style="transition-delay: 100ms;">
+                    <div class="p-6 h-full flex flex-col justify-between z-10 relative">
+                        <div>
+                            <div class="flex justify-between items-center mb-6">
+                                <div class="flex items-center gap-2">
+                                    <i class="far fa-folder text-4xl text-primary"></i>
+                                </div>
+                                <div class="flex space-x-4 text-light">
+                                    <a href="https://notime.co.in" target="_blank" class="hover:text-primary transition-colors" title="Live Site"><i class="fas fa-external-link-alt text-xl"></i></a>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-light mb-2 group-hover:text-primary transition-colors">NoTime</h3>
+                            <p class="text-sm mb-4 text-secondary">Frontend development for a modern web platform. Focused on creating responsive, interactive user interfaces and ensuring smooth navigation flows.</p>
+                        </div>
+                        <ul class="flex flex-wrap gap-3 text-xs font-mono text-secondary mt-4">
+                            <li class="text-primary">Frontend</li>
+                            <li class="text-primary">React</li>
+                            <li>UI/UX</li>
+                        </ul>
+                    </div>
                 </div>
+                `;
+                projectsGrid.insertAdjacentHTML('beforeend', noTimeHTML);
 
-            </div>
-
-
-            <!-- project 2  -->
-
-            <div
-                class="pro-2 border border-zinc-950 dark:border-slate-200 rounded-3xl p-5 grid place-items-center xl:p-10">
-
-                <!-- project img  -->
-
-                <img src="./images/Screenshot_2025-10-18-00-24-06-893-edit_com.brave.browser.jpg"
-                    class="w-[250px] h-[250px] object-cover rounded-3xl xl:w-[300px] xl:h-[300px]">
-
-                <!-- project name  -->
-
-
-                <h1 class="pro-2-head font-bold text-3xl my-2 xl:my-5">Hero Section</h1>
-
-                <!-- buttons  -->
-
-                <div class="flex gap-x-3 mt-5 xl:gap-x-4">
-
-                    <!-- github button  -->
-
-                    <a href="https://github.com/ab-h-i-n/Hero_Section" target="_blank"><button
-                            class="pro-2-b-1 py-2 px-4 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950">GitHub</button></a>
-
-                    <!-- view demo button  -->
-
-                    <a href="https://ab-h-i-n.github.io/Hero_Section/" target="_blank"><button
-                            class="pro-2-b-2 py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Live
-                            Demo</button></a>
-
+                // --- MANUAL PROJECT 3: QUICK OFF TIMER ---
+                const quickOffTimerHTML = `
+                <div class="group relative rounded-lg bg-card overflow-hidden hover:-translate-y-2 transition-all duration-300 reveal active hover-trigger" style="transition-delay: 200ms;">
+                    <div class="p-6 h-full flex flex-col justify-between z-10 relative">
+                        <div>
+                            <div class="flex justify-between items-center mb-6">
+                                <div class="flex items-center gap-2">
+                                    <i class="far fa-folder text-4xl text-primary"></i>
+                                </div>
+                                <div class="flex space-x-4 text-light">
+                                    <a href="https://apps.shopify.com/quick-off-timers?search_id=7ce4d925-a4dc-42a6-ac3e-d7e6ba398ea2&surface_detail=quick+off+timers&surface_inter_position=2&surface_intra_position=10&surface_type=search" target="_blank" class="hover:text-primary transition-colors" title="View App"><i class="fas fa-external-link-alt text-xl"></i></a>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-light mb-2 group-hover:text-primary transition-colors">Quick Off Timer</h3>
+                            <p class="text-sm mb-4 text-secondary">A Full Stack Shopify App enabling merchants to create urgency. Handled complete app lifecycle including backend logic, database, and frontend integration.</p>
+                        </div>
+                        <ul class="flex flex-wrap gap-3 text-xs font-mono text-secondary mt-4">
+                            <li class="text-primary">Full Stack</li>
+                            <li class="text-primary">Shopify App</li>
+                            <li>Node.js</li>
+                        </ul>
+                    </div>
                 </div>
+                `;
+                projectsGrid.insertAdjacentHTML('beforeend', quickOffTimerHTML);
 
-            </div>
+                // --- GITHUB REPOS ---
+                repos.forEach((repo, index) => {
+                    // Fallbacks for data
+                    const description = repo.description || "No description available for this project.";
+                    const language = repo.language || "Code";
+                    const homepageLink = repo.homepage ? 
+                        `<a href="${repo.homepage}" target="_blank" class="hover:text-primary transition-colors"><i class="fas fa-external-link-alt text-xl"></i></a>` : '';
+                    
+                    // Create Card HTML
+                    // We start delay at 300ms because we have 3 manual projects before this
+                    const cardHTML = `
+                    <div class="group relative rounded-lg bg-card overflow-hidden hover:-translate-y-2 transition-all duration-300 reveal active hover-trigger" style="transition-delay: ${(index + 3) * 100}ms;">
+                        <div class="p-6 h-full flex flex-col justify-between z-10 relative">
+                            <div>
+                                <div class="flex justify-between items-center mb-6">
+                                    <i class="far fa-folder text-4xl text-primary"></i>
+                                    <div class="flex space-x-4 text-light">
+                                        <a href="${repo.html_url}" target="_blank" class="hover:text-primary transition-colors"><i class="fab fa-github text-xl"></i></a>
+                                        ${homepageLink}
+                                    </div>
+                                </div>
+                                <h3 class="text-xl font-bold text-light mb-2 group-hover:text-primary transition-colors text-ellipsis overflow-hidden whitespace-nowrap" title="${repo.name}">${repo.name}</h3>
+                                <p class="text-sm mb-4 text-secondary line-clamp-3">${description}</p>
+                            </div>
+                            <ul class="flex flex-wrap gap-3 text-xs font-mono text-secondary mt-4">
+                                <li class="text-primary">${language}</li>
+                                <li>${repo.stargazers_count} <i class="fas fa-star text-xs"></i></li>
+                            </ul>
+                        </div>
+                    </div>
+                    `;
+                    projectsGrid.insertAdjacentHTML('beforeend', cardHTML);
+                });
 
-            <!-- project 3  -->
+                // Re-attach hover triggers for cursor effect on new elements
+                const newTriggers = document.querySelectorAll('.hover-trigger');
+                newTriggers.forEach(trigger => {
+                    trigger.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                    trigger.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+                });
 
-            <div
-                class="pro-3 border border-zinc-950 dark:border-slate-200 rounded-3xl p-5 grid place-items-center xl:p-10">
+            } catch (error) {
+                console.error('Error fetching GitHub data:', error);
+                // Optional: render a fallback error message in the grid
+            }
+        }
 
-                <!-- project img  -->
+        // Execute fetch
+        fetchGitHubData();
 
-                <img src="./images/Screenshot from 2024-02-17 00-24-36.png"
-                    class="w-[250px] h-[250px] object-cover rounded-3xl xl:w-[300px] xl:h-[300px]">
-
-                <!-- project name  -->
-
-
-                <h1 class="pro-3-head font-bold text-3xl my-2 text-center xl:my-5">Login Page</h1>
-
-                <!-- buttons  -->
-
-                <div class="flex gap-x-3 mt-5 xl:gap-x-4">
-
-                    <!-- github button  -->
-
-                    <a href="https://github.com/ab-h-i-n/Login_Page_Tailwind" target="_blank"><button
-                            class="pro-3-b-1 py-2 px-4 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950">GitHub</button></a>
-
-                    <!-- view demo button  -->
-
-                    <a href="https://ab-h-i-n.github.io/Login_Page_Tailwind/" target="_blank"><button
-                            class="pro-3-b-2 py-2 px-3 rounded-3xl border-2 border-zinc-950 dark:border-slate-200 cursor-pointer hover:bg-zinc-950 hover:text-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950 ">Live
-                            Demo</button></a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!-- contacts section  -->
-
-    <section id="contacts"
-        class="h-full min-h-screen flex flex-col items-center justify-center gap-y-5 relative snap-start snap-mandatory">
-
-        <!-- heading  -->
-        <div class="grid xl:mb-20">
-
-            <p class="cont-sub-heading text-md text-zinc-400 dark:text-zinc-200 text-center">Get In Touch</p>
-            <h1 class="cont-main-heading text-4xl text-zinc-950 dark:text-slate-100 text-center font-black xl:text-6xl">
-                Contact Me</h1>
-
-        </div>
-
-        <!-- contact links  -->
-
-        <div class="grid gap-y-5 place-items-center xl:flex xl:gap-x-5 ">
-            <!-- mail opening button  -->
-
-            <a href="mailto:abhinshelly@gmail.com" class="cont-button">
-
-                <!-- button  -->
-
-                <button
-                    class="py-4 px-8  border border-zinc-400 rounded-3xl flex gap-x-3 items-center hover:bg-zinc-950 hover:text-slate-100 hover:border-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950  xl:px-[5rem] xl:py-[2rem]">
-
-                    <!-- svg  -->
-
-                    <svg class="fill-current text-zinc-400 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 96"
-                        id="email">
-                        <g data-name="Layer 2">
-                            <path
-                                d="M0 11.283V8a8 8 0 0 1 8-8h112a8 8 0 0 1 8 8v3.283l-64 40zm66.12 48.11a4.004 4.004 0 0 1-4.24 0L0 20.717V88a8 8 0 0 0 8 8h112a8 8 0 0 0 8-8V20.717z">
-                            </path>
-                        </g>
-                    </svg>
-
-                    <!-- label  -->
-
-                    <p>abhinshelly@gmail.com</p>
-                </button>
-
-            </a>
-
-            <!-- whatsapp opening button  -->
-
-            <a href="https://wa.me/+916282826684" class="cont-button">
-
-                <!-- button  -->
-
-                <button
-                    class="py-4 px-8  border border-zinc-400 rounded-3xl flex gap-x-3 items-center hover:bg-zinc-950 hover:text-slate-100 hover:border-slate-100 dark:hover:bg-slate-100 dark:hover:text-zinc-950  xl:px-[6rem] xl:py-[2rem]">
-
-                    <!-- svg  -->
-
-                    <svg class="fill-current text-zinc-400 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path
-                            d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-                    </svg>
-
-                    <!-- label  -->
-
-                    <p>+91 6282826684</p>
-                </button>
-
-            </a>
-        </div>
-
-
-        <!-- links  -->
-
-        <ul id="bottom" class=" bottom-links flex absolute bottom-10 lg:bottom-32 gap-x-5 lg:gap-x-20 text-sm lg:text-xl">
-
-            <li><a href="#top">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#projects">Projects</a></li>
-
-        </ul>
-
-    </section>
-
-    <!-- for scroll animation  -->
-
-    <script src="https://unpkg.com/scrollreveal"></script>
-
-    <!-- javascript file  -->
-
-    <script src="./script.js"></script>
+    </script>
 </body>
-
 </html>
